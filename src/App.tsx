@@ -16,11 +16,15 @@ export const goodsFromServer: string[] = [
   'Garlic',
 ];
 
-type SortType = 'alphabet' | 'length' | '';
+enum SortField {
+  None = '',
+  Alphabet = 'alphabet',
+  Length = 'length',
+}
 
 export const App = () => {
   const [visibleGoods, setVisibleGoods] = useState<string[]>(goodsFromServer);
-  const [sortBy, setSortBy] = useState<SortType>('');
+  const [sortBy, setSortBy] = useState<SortField>(SortField.None);
   const [isReversed, setIsReversed] = useState<boolean>(false);
 
   const itemsToDisplay = isReversed
@@ -33,7 +37,7 @@ export const App = () => {
         <button
           type="button"
           className={ch('button', 'is-info', {
-            'is-light': sortBy !== 'alphabet',
+            'is-light': sortBy !== SortField.Alphabet,
           })}
           onClick={() => {
             const sortedAlphabet = [...goodsFromServer].sort((a, b) => {
@@ -41,7 +45,7 @@ export const App = () => {
             });
 
             setVisibleGoods(sortedAlphabet);
-            setSortBy('alphabet');
+            setSortBy(SortField.Alphabet);
           }}
         >
           Sort alphabetically
@@ -50,7 +54,7 @@ export const App = () => {
         <button
           type="button"
           className={ch('button', 'is-success', {
-            'is-light': sortBy !== 'length',
+            'is-light': sortBy !== SortField.Length,
           })}
           onClick={() => {
             const sortedLength = [...goodsFromServer].sort(
@@ -58,7 +62,7 @@ export const App = () => {
             );
 
             setVisibleGoods(sortedLength);
-            setSortBy('length');
+            setSortBy(SortField.Length);
           }}
         >
           Sort by length
@@ -72,13 +76,13 @@ export const App = () => {
           Reverse
         </button>
 
-        {(sortBy !== '' || isReversed) && (
+        {(sortBy !== SortField.None || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
             onClick={() => {
               setVisibleGoods(goodsFromServer);
-              setSortBy('');
+              setSortBy(SortField.None);
               setIsReversed(false);
             }}
           >
